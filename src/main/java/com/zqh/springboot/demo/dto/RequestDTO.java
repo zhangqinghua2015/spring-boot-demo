@@ -3,6 +3,7 @@ package com.zqh.springboot.demo.dto;
 import com.alibaba.fastjson.annotation.JSONField;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Date;
 
 /**
@@ -18,7 +19,7 @@ public class RequestDTO implements Serializable {
     private Integer isEnable;
 
 //    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    private Date startTimeEachDay;
+    private Time startTimeEachDay;
 
 
     public Integer getIsEnable() {
@@ -29,11 +30,11 @@ public class RequestDTO implements Serializable {
         this.isEnable = isEnable;
     }
 
-    public Date getStartTimeEachDay() {
+    public Time getStartTimeEachDay() {
         return startTimeEachDay;
     }
 
-    public void setStartTimeEachDay(Date startTimeEachDay) {
+    public void setStartTimeEachDay(Time startTimeEachDay) {
         this.startTimeEachDay = startTimeEachDay;
     }
 }
