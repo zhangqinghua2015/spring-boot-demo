@@ -1,10 +1,10 @@
 package com.zqh.springboot.demo.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.zqh.springboot.demo.dto.RequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,5 +31,12 @@ public class IndexController {
         return "这是index接口, " + codeInfo;
     }
 
+    @PostMapping("/jsonFiledTest")
+    @ResponseBody
+    public RequestDTO jsonFiledTest(String requestDTOStr) {
+        RequestDTO requestDTO = JSON.parseObject(requestDTOStr, RequestDTO.class);
+        System.out.println(JSON.toJSONString(requestDTO));
+        return requestDTO;
+    }
 
 }
