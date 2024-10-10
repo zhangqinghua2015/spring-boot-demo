@@ -36,8 +36,8 @@ jobs:
     # 登录Docker Hub
     - name: Build the Docker image
       env:
-          # IMAGE_TAG: ${{ github.sha }}
-          IMAGE_TAG: ${{ steps.commit_hash.outputs.commit_hash }}
+          IMAGE_TAG: ${{ github.sha }}
+          # IMAGE_TAG: ${{ steps.commit_hash.outputs.commit_hash }}
       run: |
         echo ${{ github.sha }}
         docker version
