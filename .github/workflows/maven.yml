@@ -53,6 +53,21 @@ jobs:
         docker build . --file Dockerfile --tag ${{ vars.HUBADDR }}/${{ vars.USER_NAME }}/${{ vars.IMAGE_NAME }}:$IMAGE_TAG
         # 推送镜像到镜像仓库
         docker push ${{ vars.HUBADDR }}/${{ vars.USER_NAME }}/${{ vars.IMAGE_NAME }}:$IMAGE_TAG
+    - name: update deployment tag
+      run: |
+        sed -i 's/latest/${{ github.sha }}/g' deployment.yaml
+        git config --global user.email "workflow"
+        git config --global user.name "workflow"
+        git add .
+        git commit -m "update"
+    - name: save results
+      uses: ad-m/github-push-action@master
+      with:
+        # github_token: ${{ secrets.GH_TOKEN }}
+        # repository: ${{ secrets.GH_PATH }}
+        directory: .
+        branch: deployment
+        force: true
     # push后，用ssh连接服务器执行脚本    
     # - name: 登录服务器, 执行脚本
     #   uses: appleboy/ssh-action@master
