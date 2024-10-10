@@ -38,7 +38,7 @@ spec:
         - name: myalisecret
       containers:
         - name: spring-boot-demo
-          image: registry.cn-hangzhou.aliyuncs.com/qnzhang/spring-boot-demo:latest
+          image: registry.cn-hangzhou.aliyuncs.com/qhzhang/spring-boot-demo:latest
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
