@@ -38,7 +38,7 @@ jobs:
       env:
           IMAGE_TAG: ${{ steps.commit_hash.outputs.commit_hash }}
       run: |
-        ls -la
+        ls -la ./target
         docker version
         # 登录阿里云镜像仓库
         docker login --username=${{ secrets.DOCKER_HUB_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }} registry.cn-hangzhou.aliyuncs.com
