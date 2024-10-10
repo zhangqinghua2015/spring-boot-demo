@@ -66,12 +66,20 @@ update-deployment:
   variables:
     BRANCH_NAME: deployment
   script:
-    - git checkout -b $BRANCH_NAME
-    - sed -i 's/latest/gitlab-$CI_COMMIT_SHORT_SHA/g' deployment.yaml
+    # - cd ../
+    # - rm -rf ./spring-boot-demo
+    # - git remote set-url origin https://$GITLAB_USER:$AC_TK@gitlab.com/$GROUP_ID/spring-boo-demo.git
+    - git branch --show-current
+    - git fetch
+    - git checkout master
+    # - git pull --force
+    - cat deployment.yaml
+    - sed -i "s/latest/gitlab-$CI_COMMIT_SHORT_SHA/g" deployment.yaml
+    - cat deployment.yaml
     - git config --global user.email "pipeline"
     - git config --global user.name "pipeline"
-    - git add ./deployment.yaml
+    - git add deployment.yaml
     - git commit -m "update"
     - git branch -r
-    - git push -u https://$GITLAB_USER:$AC_TK@gitlab.com/$GROUP_ID/spring-boo-demo.git +$BRANCH_NAME
+    - git push -f https://$GITLAB_USER:$AC_TK@gitlab.com/$GROUP_ID/spring-boo-demo.git master:$BRANCH_NAME --force
     
