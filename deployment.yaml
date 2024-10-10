@@ -6,7 +6,7 @@ metadata:
   labels:
     k8s-app: spring-boot-demo
 spec:
-  type: ClusterIp
+  type: NodePort
   ports:
     - port: 8901
       protocol: TCP
@@ -31,7 +31,7 @@ spec:
   template:
     metadata:
       labels:
-        k8s-app: sentinel-dashboard
+        k8s-app: spring-boot-demo
     spec:
       # kubectl create secret docker-registry myalisecret --docker-server=registry.cn-hangzhou.aliyuncs.com --docker-username=*** --docker-password=*** -n ***
       imagePullSecrets:
