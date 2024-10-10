@@ -1,4 +1,5 @@
 FROM openjdk:8-alpine
-# COPY ./chat-front.jar /tmp/chat-front.jar
+RUN mkdir /home/app
+COPY ./spring-boot-demo.jar /home/app/spring-boot-demo.jar
 EXPOSE 8901
-ENTRYPOINT java -jar spring-boot-demo.jar
+ENTRYPOINT java -jar /home/app/spring-boot-demo.jar
