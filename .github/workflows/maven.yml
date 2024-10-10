@@ -58,7 +58,7 @@ jobs:
         sed -i 's/latest/${{ github.sha }}/g' deployment.yaml
         git config --global user.email "workflow"
         git config --global user.name "workflow"
-        git add .
+        git add ./deployment.yaml
         git commit -m "update"
     - name: save results
       uses: ad-m/github-push-action@master
