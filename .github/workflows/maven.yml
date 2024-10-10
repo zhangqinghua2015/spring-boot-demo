@@ -45,7 +45,7 @@ jobs:
         # cd spring-boot-demo
         mkdir docker
         cp ./Dockerfile ./docker
-        cp ./target/spring-boot-demo-0.0.1-SNAPSHORT.jar ./docker/spring-boot-demo.jar
+        cp ./target/spring-boot-demo-0.0.1-SNAPSHOT.jar ./docker/spring-boot-demo.jar
         cd docker
         # 使用Dockerfile构建镜像
         docker build . --file Dockerfile --tag ${{ vars.HUBADDR }}/${{ vars.USER_NAME }}/${{ vars.IMAGE_NAME }}:${{ vars.tag }}
