@@ -1,0 +1,77 @@
+stages:
+#  - test
+  - build
+  - deploy
+
+variables:
+  MAVEN_OPTS: >-
+    -Dhttps.protocols=TLSv1.2
+    -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository
+    -Dorg.slf4j.simpleLogger.showDateTime=true
+    -Djava.awt.headless=true
+  DOCKER_IMAGE_NAME: registry.cn-hangzhou.aliyuncs.com/$ALI_DOCKER_USER/spring-boot-demo
+  TAG: gitlab-$CI_COMMIT_SHORT_SHA
+
+.config:
+  image: maven:3-openjdk-8
+  cache:
+    paths:
+      - .m2/repository
+      - /builds/$GROUP_USER/spring-boo-demo
+
+.docker-config:
+  variables:
+    DOCKER_IMAGE: docker:27.0.3
+    DIND_IMAGE: $DOCKER_IMAGE-dind
+
+#test:
+#  stage: test
+#  script:
+#    - ./mvnw test
+
+maven-package:
+  stage: build
+  extends: [.config]
+  script:
+    - ./mvnw clean package -DskipTests
+    - pwd
+  rules:
+    # - when: never
+    - when: manual
+
+docker-build:
+  stage: build
+  needs:
+    - maven-package
+  extends: [.config, .docker-config]
+  image: $DOCKER_IMAGE
+  services:
+    - name: $DIND_IMAGE
+      alias: docker
+  script:
+    # cd spring-boot-demo
+    - mkdir -p docker
+    - cp ./Dockerfile ./docker
+    - cp ./target/spring-boot-demo-0.0.1-SNAPSHOT.jar ./docker/spring-boot-demo.jar
+    - cd docker
+    # 使用Dockerfile构建镜像
+    - docker build . --file Dockerfile --tag $DOCKER_IMAGE_NAME:$TAG
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin registry.cn-hangzhou.aliyuncs.com
+    # - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+    - docker push $DOCKER_IMAGE_NAME:$TAG
+
+update-deployment:
+  stage: deploy
+  extends: [.config, .docker-config]
+  variables:
+    BRANCH_NAME: deployment
+  script:
+    - git checkout -b $BRANCH_NAME
+    - sed -i 's/latest/gitlab-$CI_COMMIT_SHORT_SHA/g' deployment.yaml
+    - git config --global user.email "pipeline"
+    - git config --global user.name "pipeline"
+    - git add ./deployment.yaml
+    - git commit -m "update"
+    - git branch -r
+    - git push -u https://$GITLAB_USER:$AC_TK@gitlab.com/$GROUP_ID/spring-boo-demo.git +$BRANCH_NAME
+    
